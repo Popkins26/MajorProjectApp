@@ -32,19 +32,16 @@ class LoginPage extends StatelessWidget {
         // Navigate to FirstPage after login
         Navigator.pushReplacementNamed(context, '/first');
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
 
     Future<void> signInWithGoogle() async {
       try {
         final GoogleSignIn googleSignIn = GoogleSignIn(
-          scopes: [
-            'email',
-            calendar.CalendarApi.calendarScope,
-          ],
+          scopes: ['email', calendar.CalendarApi.calendarScope],
         );
 
         final GoogleSignInAccount? gUser = await googleSignIn.signIn();
@@ -74,88 +71,106 @@ class LoginPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.chat_bubble_outline,
-                    size: 80,
-                    color: Colors.black87,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Welcome back! You've been missed!",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+      appBar: AppBar(
+        title: const Text(
+          'Login',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
+      body: Container(
+        color: const Color(0xFFF5F5F5),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.chat_bubble_outline,
+                      size: 80,
                       color: Colors.black87,
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  MyTextField(
-                    controller: emailController,
-                    hintText: "Email",
-                    obscureText: false,
-                    focusNode: emailFocusNode,
-                  ),
-                  const SizedBox(height: 15),
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: "Password",
-                    obscureText: true,
-                    focusNode: passwordFocusNode,
-                  ),
-                  const SizedBox(height: 25),
-                  MyButton(onTap: signIn, text: "Sign In"),
-                  const SizedBox(height: 15),
-                  ElevatedButton.icon(
-                    onPressed: signInWithGoogle,
-                    icon: Image.asset(
-                      'assets/google_logo.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    label: const Text(
-                      'Sign in with Google',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Welcome back! You've been missed!",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Not a member? ",
-                        style: TextStyle(color: Colors.black54),
+                    const SizedBox(height: 25),
+                    MyTextField(
+                      controller: emailController,
+                      hintText: "Email",
+                      obscureText: false,
+                      focusNode: emailFocusNode,
+                    ),
+                    const SizedBox(height: 15),
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: "Password",
+                      obscureText: true,
+                      focusNode: passwordFocusNode,
+                    ),
+                    const SizedBox(height: 25),
+                    MyButton(onTap: signIn, text: "Sign In"),
+                    const SizedBox(height: 15),
+                    ElevatedButton.icon(
+                      onPressed: signInWithGoogle,
+                      icon: Image.asset(
+                        'assets/google_logo.png',
+                        height: 24,
+                        width: 24,
                       ),
-                      GestureDetector(
-                        onTap: onTap,
-                        child: const Text(
-                          "Register now",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      label: const Text(
+                        'Sign in with Google',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 20,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Not a member? ",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        GestureDetector(
+                          onTap: onTap,
+                          child: const Text(
+                            "Register now",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -164,4 +179,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
-

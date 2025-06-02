@@ -59,11 +59,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "636697091584-7ljbmn642pi4ii04u6se64r7smuhbeod.apps.googleusercontent.com",
+          "client_id": "636697091584-3uqujhfsh5m8vojkijpnp38o2iv0vdvd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.siddhantdhongde.major_project_app",
-            "certificate_hash": "17dd0cd007ec9cb630905d801e23d8305e3ea6e3"
+            "certificate_hash": "0514eaf330b060f916d41e0be8da8fd8e6621358"
           }
         },
         {

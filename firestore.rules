@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Allow each authenticated user to access only their own document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow authenticated users to read and write to the recordings collection
+    match /recordings/{docId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Allow authenticated users to read and write to the tasks collection
+    match /tasks/{taskId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Allow authenticated users to read and write to the emergency_notifications collection
+    match /emergency_notifications/{notificationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Example: Allow authenticated users to read a public collection
+    match /public/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false; // No writes to public by default
+    }
+  }
+} 

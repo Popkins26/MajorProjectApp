@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MedicalHistoryPage extends StatefulWidget {
+  const MedicalHistoryPage({super.key});
+
   @override
   _MedicalHistoryPageState createState() => _MedicalHistoryPageState();
 }
@@ -29,7 +31,8 @@ class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    final doc = await _firestore.collection('medical_history').doc(user.uid).get();
+    final doc =
+        await _firestore.collection('medical_history').doc(user.uid).get();
     if (doc.exists) {
       final data = doc.data()!;
       _nameController.text = data['name'] ?? '';
@@ -62,7 +65,11 @@ class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {TextInputType? keyboardType}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType? keyboardType,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
@@ -71,11 +78,12 @@ class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -88,61 +96,99 @@ class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Medical History', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
+        title: const Text(
+          'Medical History',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Update Your Medical History',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                            _buildTextField('Name', _nameController),
-                            _buildTextField('Age', _ageController, keyboardType: TextInputType.number),
-                            _buildTextField('Medical Conditions', _conditionsController),
-                            _buildTextField('Allergies', _allergiesController),
-                            _buildTextField('Current Medications', _medicationsController),
-                            _buildTextField('Past Surgeries', _surgeriesController),
-                            SizedBox(height: 20),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _saveMedicalHistory,
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      body: Container(
+        color: const Color(0xFFF5F5F5),
+        child:
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Update Your Medical History',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
-                                child: Text('Save', style: TextStyle(fontSize: 16)),
-                              ),
+                                SizedBox(height: 16),
+                                _buildTextField('Name', _nameController),
+                                _buildTextField(
+                                  'Age',
+                                  _ageController,
+                                  keyboardType: TextInputType.number,
+                                ),
+                                _buildTextField(
+                                  'Medical Conditions',
+                                  _conditionsController,
+                                ),
+                                _buildTextField(
+                                  'Allergies',
+                                  _allergiesController,
+                                ),
+                                _buildTextField(
+                                  'Current Medications',
+                                  _medicationsController,
+                                ),
+                                _buildTextField(
+                                  'Past Surgeries',
+                                  _surgeriesController,
+                                ),
+                                SizedBox(height: 20),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: _saveMedicalHistory,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Save',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+      ),
     );
   }
 }

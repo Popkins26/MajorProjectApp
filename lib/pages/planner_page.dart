@@ -29,11 +29,18 @@ class _PlannerPageState extends State<PlannerPage> {
     if (user == null) return;
 
     DocumentSnapshot snapshot =
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
     if (snapshot.exists) {
       setState(() {
-        dailyTasks = List<Map<String, dynamic>>.from(snapshot['dailyTasks'] ?? []);
-        doctorAppointments = List<Map<String, dynamic>>.from(snapshot['doctorAppointments'] ?? []);
+        dailyTasks = List<Map<String, dynamic>>.from(
+          snapshot['dailyTasks'] ?? [],
+        );
+        doctorAppointments = List<Map<String, dynamic>>.from(
+          snapshot['doctorAppointments'] ?? [],
+        );
       });
     }
   }
@@ -48,13 +55,13 @@ class _PlannerPageState extends State<PlannerPage> {
     });
   }
 
-  Future<Map<String, dynamic>?> _addToGoogleCalendar(String title, DateTime dateTime) async {
+  Future<Map<String, dynamic>?> _addToGoogleCalendar(
+    String title,
+    DateTime dateTime,
+  ) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: [
-          'email',
-          calendar.CalendarApi.calendarScope,
-        ],
+        scopes: ['email', calendar.CalendarApi.calendarScope],
       );
 
       final GoogleSignInAccount? googleUser =
@@ -62,7 +69,9 @@ class _PlannerPageState extends State<PlannerPage> {
 
       final googleAuth = await googleUser?.authentication;
 
-      if (googleUser == null || googleAuth == null || googleAuth.accessToken == null) {
+      if (googleUser == null ||
+          googleAuth == null ||
+          googleAuth.accessToken == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Google access token not available.")),
         );
@@ -83,14 +92,17 @@ class _PlannerPageState extends State<PlannerPage> {
       );
 
       final calendarApi = calendar.CalendarApi(authClient);
-      final event = calendar.Event()
-        ..summary = title
-        ..start = (calendar.EventDateTime()
-          ..dateTime = dateTime.toUtc()
-          ..timeZone = "UTC")
-        ..end = (calendar.EventDateTime()
-          ..dateTime = dateTime.add(const Duration(hours: 1)).toUtc()
-          ..timeZone = "UTC");
+      final event =
+          calendar.Event()
+            ..summary = title
+            ..start =
+                (calendar.EventDateTime()
+                  ..dateTime = dateTime.toUtc()
+                  ..timeZone = "UTC")
+            ..end =
+                (calendar.EventDateTime()
+                  ..dateTime = dateTime.add(const Duration(hours: 1)).toUtc()
+                  ..timeZone = "UTC");
 
       final createdEvent = await calendarApi.events.insert(event, "primary");
 
@@ -98,9 +110,7 @@ class _PlannerPageState extends State<PlannerPage> {
         const SnackBar(content: Text("Appointment added to Google Calendar!")),
       );
 
-      return {
-        'calendarEventId': createdEvent.id,
-      };
+      return {'calendarEventId': createdEvent.id};
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error adding to Google Calendar: $e")),
@@ -120,7 +130,10 @@ class _PlannerPageState extends State<PlannerPage> {
           await googleSignIn.signInSilently() ?? await googleSignIn.signIn();
       final googleAuth = await googleUser?.authentication;
 
-      if (googleUser == null || googleAuth == null || googleAuth.accessToken == null) return;
+      if (googleUser == null ||
+          googleAuth == null ||
+          googleAuth.accessToken == null)
+        return;
 
       final authClient = auth.authenticatedClient(
         http.Client(),
@@ -177,13 +190,19 @@ class _PlannerPageState extends State<PlannerPage> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text(isDoctorAppointment ? "Add Doctor Appointment" : "Add Daily Task"),
+              title: Text(
+                isDoctorAppointment
+                    ? "Add Doctor Appointment"
+                    : "Add Daily Task",
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: taskController,
-                    decoration: const InputDecoration(hintText: "Enter details"),
+                    decoration: const InputDecoration(
+                      hintText: "Enter details",
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -216,26 +235,38 @@ class _PlannerPageState extends State<PlannerPage> {
                         }
                       }
                     },
-                    child: Text(selectedDateTime == null
-                        ? "Select Date & Time"
-                        : DateFormat('yyyy-MM-dd – HH:mm').format(selectedDateTime!)),
+                    child: Text(
+                      selectedDateTime == null
+                          ? "Select Date & Time"
+                          : DateFormat(
+                            'yyyy-MM-dd – HH:mm',
+                          ).format(selectedDateTime!),
+                    ),
                   ),
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (taskController.text.isNotEmpty && selectedDateTime != null) {
+                    if (taskController.text.isNotEmpty &&
+                        selectedDateTime != null) {
                       final task = {
                         'task': taskController.text,
                         'time': selectedDateTime.toString(),
                       };
 
                       if (isDoctorAppointment) {
-                        final calendarInfo = await _addToGoogleCalendar(taskController.text, selectedDateTime!);
+                        final calendarInfo = await _addToGoogleCalendar(
+                          taskController.text,
+                          selectedDateTime!,
+                        );
                         if (calendarInfo != null) {
-                          task['calendarEventId'] = calendarInfo['calendarEventId'];
+                          task['calendarEventId'] =
+                              calendarInfo['calendarEventId'];
                         }
                         setState(() {
                           doctorAppointments.add(task);
@@ -264,40 +295,47 @@ class _PlannerPageState extends State<PlannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Planner'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: const Text(
+          'Planner',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 6,
-                child: _buildPlannerCard(
-                  title: "Daily Tasks",
-                  items: dailyTasks,
-                  onAdd: _addDailyTask,
-                  isDoctorAppointment: false,
+      body: Container(
+        color: const Color(0xFFF5F5F5),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: _buildPlannerCard(
+                    title: "Daily Tasks",
+                    items: dailyTasks,
+                    onAdd: _addDailyTask,
+                    isDoctorAppointment: false,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                flex: 4,
-                child: _buildPlannerCard(
-                  title: "Upcoming Doctor Appointments",
-                  items: doctorAppointments,
-                  onAdd: _addDoctorAppointment,
-                  isDoctorAppointment: true,
+                const SizedBox(height: 10),
+                Expanded(
+                  flex: 4,
+                  child: _buildPlannerCard(
+                    title: "Upcoming Doctor Appointments",
+                    items: doctorAppointments,
+                    onAdd: _addDoctorAppointment,
+                    isDoctorAppointment: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -321,33 +359,47 @@ class _PlannerPageState extends State<PlannerPage> {
             Row(
               children: [
                 Expanded(
-                  child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle, size: 32, color: Colors.blue),
+                  icon: const Icon(
+                    Icons.add_circle,
+                    size: 32,
+                    color: Colors.blue,
+                  ),
                   onPressed: onAdd,
                 ),
               ],
             ),
             const Divider(thickness: 1.5),
             Expanded(
-              child: items.isEmpty
-                  ? const Center(child: Text("No tasks added."))
-                  : ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(items[index]['task']),
-                          subtitle: Text(
-                            "${DateFormat('EEEE, MMM d – hh:mm a').format(DateTime.parse(items[index]['time']))}",
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteTask(index, isDoctorAppointment),
-                          ),
-                        );
-                      },
-                    ),
+              child:
+                  items.isEmpty
+                      ? const Center(child: Text("No tasks added."))
+                      : ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(items[index]['task']),
+                            subtitle: Text(
+                              DateFormat(
+                                'EEEE, MMM d – hh:mm a',
+                              ).format(DateTime.parse(items[index]['time'])),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed:
+                                  () => _deleteTask(index, isDoctorAppointment),
+                            ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:major_project_app/pages/task_record_page.dart';
 import 'package:major_project_app/pages/voice_recording_page.dart';
-import 'package:major_project_app/pages/emergency_page.dart'; // Import EmergencyPage
+import 'package:major_project_app/pages/video_feed_page.dart'; // Import VideoFeedPage
 import 'package:major_project_app/services/auth/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'drawer_page.dart';
@@ -30,23 +30,39 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       VoiceRecorderPage(),
       TaskSchedulerPage(),
-      EmergencyPage(), // Add EmergencyPage for live video feed
+      VideoFeedPage(), // Use VideoFeedPage for live video feed
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Care Taker Bot")),
+        title: const Center(
+          child: Text(
+            "Care Taker Bot",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
         actions: [
           IconButton(icon: const Icon(Icons.logout), onPressed: _logout),
         ],
       ),
       drawer: const DrawerPage(), // PlannerPage moved to the drawer
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: _pages[_selectedIndex],
+      body: Container(
+        color: const Color(0xFFF5F5F5),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: pages[_selectedIndex],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
