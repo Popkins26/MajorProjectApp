@@ -6,7 +6,7 @@ This system bridges real-time interaction between a mobile user and a Raspberry 
 
 ## Key Features
 
-Mobile Application (Flutter based) --->
+ Mobile Application (Flutter based) --->
 1.Voice Note Recording – Easily record, upload, and playback voice notes stored securely in Firebase Storage.
 2.Task Management – View, track, and mark daily tasks with smart reminders.
 3.User Profiles – Personalized greeting and profile-based access via Firebase Authentication.
@@ -21,7 +21,7 @@ Mobile Application (Flutter based) --->
 4. Voice Messaging – Local user can record voice responses that sync back to the mobile app.
 5. Firebase Integration – Syncs tasks, voice notes, and messages with the cloud for seamless data sharing.
 
-TechStack --->
+ TechStack --->
 Frontend: Flutter (Mobile App)
 Backend/Sync: Firebase (Firestore, Storage, Auth)
 Raspberry Pi: Python (Tkinter GUI), Camera Module, USB Audio Devices
